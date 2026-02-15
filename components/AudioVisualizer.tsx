@@ -14,7 +14,6 @@ export const AudioVisualizer: React.FC<AudioVisualizerProps> = ({ stream, isReco
   useEffect(() => {
     if (!stream || !isRecording || !canvasRef.current) return;
 
-    // Setup Audio Context
     if (!contextRef.current) {
       contextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
     }
@@ -47,8 +46,7 @@ export const AudioVisualizer: React.FC<AudioVisualizerProps> = ({ stream, isReco
       let x = 0;
 
       for (let i = 0; i < dataArray.length; i++) {
-        const barHeight = dataArray[i] / 2; // Adjusted scaling
-        // Gradient fill
+        const barHeight = dataArray[i] / 2;
         canvasCtx.fillStyle = `rgb(99, 102, 241)`;
         canvasCtx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
         x += barWidth + 2;
@@ -59,8 +57,6 @@ export const AudioVisualizer: React.FC<AudioVisualizerProps> = ({ stream, isReco
 
     return () => {
       if (requestRef.current) cancelAnimationFrame(requestRef.current);
-      // We don't close the context here to avoid issues with rapid start/stop, 
-      // but in a full app you might want to manage lifecycle more strictly.
     };
   }, [stream, isRecording]);
 
@@ -69,7 +65,7 @@ export const AudioVisualizer: React.FC<AudioVisualizerProps> = ({ stream, isReco
       ref={canvasRef} 
       width={300} 
       height={64} 
-      class="w-full h-16 bg-slate-900 rounded-lg"
+      className="w-full h-16 bg-slate-900 rounded-lg"
     />
   );
 };
