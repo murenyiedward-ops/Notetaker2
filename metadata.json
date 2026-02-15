@@ -1,0 +1,7 @@
+{
+  "name": "AI Murenyi Note Taker Pro",
+  "description": "Professional meeting insights and high-quality image generation using Gemini models.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
