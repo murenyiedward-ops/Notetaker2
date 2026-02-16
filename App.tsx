@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Mic, Image as ImageIcon } from 'lucide-react';
+import { Mic, Image as ImageIcon, Zap } from 'lucide-react';
 import { NoteTaker } from './components/NoteTaker.tsx';
 import { ImageGenerator } from './components/ImageGenerator.tsx';
 
@@ -35,19 +35,22 @@ const App: React.FC = () => {
         <div className="flex items-center gap-4">
           <Logo />
           <div>
-            <h1 className="text-2xl font-extrabold tracking-tight text-slate-900 leading-none">
+            <h1 className="text-2xl font-black tracking-tight text-slate-900 leading-none">
               Murenyi <span className="text-indigo-600">Pro</span>
             </h1>
-            <p className="text-slate-500 text-sm mt-1">Smart Meeting Notes & Visual Studio</p>
+            <p className="text-slate-500 text-xs mt-1 font-bold uppercase tracking-widest flex items-center gap-1">
+              <Zap className="w-3 h-3 text-amber-400 fill-amber-400" />
+              Ultra-Fast Flash Mode
+            </p>
           </div>
         </div>
         
-        <div className="bg-white p-1 rounded-xl border border-slate-200 shadow-sm flex self-start md:self-center">
+        <div className="bg-white p-1.5 rounded-2xl border border-slate-200 shadow-sm flex self-start md:self-center">
           <button
             onClick={() => setActiveTab('notes')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
+            className={`flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-bold transition-all ${
               activeTab === 'notes'
-                ? 'bg-indigo-50 text-indigo-700 shadow-sm'
+                ? 'bg-indigo-600 text-white shadow-lg'
                 : 'text-slate-500 hover:text-slate-700 hover:bg-slate-50'
             }`}
           >
@@ -56,9 +59,9 @@ const App: React.FC = () => {
           </button>
           <button
             onClick={() => setActiveTab('images')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
+            className={`flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-bold transition-all ${
               activeTab === 'images'
-                ? 'bg-indigo-50 text-indigo-700 shadow-sm'
+                ? 'bg-indigo-600 text-white shadow-lg'
                 : 'text-slate-500 hover:text-slate-700 hover:bg-slate-50'
             }`}
           >
@@ -68,9 +71,18 @@ const App: React.FC = () => {
         </div>
       </header>
 
-      <main>
+      <main className="transition-all duration-300">
         {activeTab === 'notes' ? <NoteTaker /> : <ImageGenerator />}
       </main>
+
+      <footer className="mt-16 pt-8 border-t border-slate-200 text-center text-slate-400 text-xs font-medium">
+        <p>© 2025 Murenyi Pro • Optimized for Performance</p>
+        <div className="mt-2 flex items-center justify-center gap-4">
+          <span>Gemini 3 Flash (Text)</span>
+          <span className="w-1.5 h-1.5 bg-slate-200 rounded-full"></span>
+          <span>Gemini 2.5 Flash (Image)</span>
+        </div>
+      </footer>
     </div>
   );
 };

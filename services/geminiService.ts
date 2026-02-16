@@ -1,5 +1,5 @@
 import { GoogleGenAI } from "@google/genai";
-import { MeetingType, MeetingLanguage, ImageSize } from "../types";
+import { MeetingType, MeetingLanguage, ImageAspectRatio } from "../types.ts";
 
 const getClient = () => new GoogleGenAI({ apiKey: process.env.API_KEY });
 
@@ -11,29 +11,17 @@ export const generateMeetingNotes = async (
 ): Promise<string> => {
   const ai = getClient();
   
-  let languageInstruction = "The meeting may be in English, Kiswahili, or both.";
-  if (lang === MeetingLanguage.KISWAHILI) languageInstruction = "The audio is in Kiswahili. Provide the response mostly in Kiswahili.";
-  if (lang === MeetingLanguage.ENGLISH) languageInstruction = "The audio is in English. Provide the response in English.";
+  let languageInstruction = "Auto-detect language (Kiswahili/English).";
+  if (lang === MeetingLanguage.KISWAHILI) languageInstruction = "The audio is strictly Kiswahili.";
+  if (lang === MeetingLanguage.ENGLISH) languageInstruction = "The audio is strictly English.";
 
-  const prompt = `
-    You are an expert meeting secretary. ${languageInstruction}
-    Context: This is a ${type} meeting recording.
-    
-    Task: Analyze the audio and generate professional notes in Markdown.
-    Structure exactly as follows:
-
-    ## 📋 Executive Summary
-    (A brief paragraph summary of the meeting's purpose and outcome)
-
-    ## 💡 Key Decisions
-    (Bulleted list of decisions made)
-
-    ## ✅ Action Items
-    (Create a Markdown Table with columns: Task, Owner, Deadline)
-
-    ## ⏭️ Next Steps
-    (Bulleted list of upcoming events or requirements)
-  `;
+  const prompt = `Analyze this ${type} meeting audio. Language: ${languageInstruction}
+    Provide a professional summary with:
+    1. Executive Summary
+    2. Key Decisions
+    3. Action Items (Markdown Table)
+    4. Next Steps
+    Use Markdown formatting.`;
 
   const response = await ai.models.generateContent({
     model: 'gemini-3-flash-preview',
@@ -47,6 +35,10 @@ export const generateMeetingNotes = async (
           }
         }
       ]
+    },
+    config: {
+      // Disable thinking for fastest response time
+      thinkingConfig: { thinkingBudget: 0 }
     }
   });
 
@@ -55,23 +47,19 @@ export const generateMeetingNotes = async (
 
 export const generateImage = async (
   prompt: string,
-  size: ImageSize
+  aspectRatio: ImageAspectRatio
 ): Promise<string | null> => {
-  // Always create a new client to ensure we pick up the latest API key from the environment
-  // which might have been updated by window.aistudio.openSelectKey()
   const ai = getClient();
 
+  // Using gemini-2.5-flash-image as it uses the standard API key and doesn't require paid key selection logic
   const response = await ai.models.generateContent({
-    model: 'gemini-3-pro-image-preview',
+    model: 'gemini-2.5-flash-image',
     contents: {
-      parts: [
-        { text: prompt }
-      ]
+      parts: [{ text: prompt }]
     },
     config: {
       imageConfig: {
-        imageSize: size,
-        aspectRatio: "1:1" // Defaulting to square, could be parameterized if needed
+        aspectRatio: aspectRatio
       }
     }
   });

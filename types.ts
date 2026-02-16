@@ -11,10 +11,11 @@ export enum MeetingLanguage {
   ENGLISH = 'english'
 }
 
-export enum ImageSize {
-  SIZE_1K = '1K',
-  SIZE_2K = '2K',
-  SIZE_4K = '4K'
+export enum ImageAspectRatio {
+  SQUARE = '1:1',
+  LANDSCAPE = '4:3',
+  PORTRAIT = '3:4',
+  WIDE = '16:9'
 }
 
 export interface NoteResponse {
